@@ -17,16 +17,47 @@ public class Player : MonoBehaviour
      * developers call the method where is required.
      */
 
+    [SerializeField] float movementSpeed = 10f;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        print("Hello this is the Start built-in method!");
+       // print("Hello this is the Start built-in method!");
     }
 
     // Update is called once per frame
     void Update()
     {
-        print("This is the Update method");
+        // print("This is the Update method");
+        Move();
+    }
+
+    /* This method will control the player's movement depending on the controls/input by the user
+     */
+    void Move()
+    {
+        /* GetAxis is a method, found in the Input class, which retrieves the particular axis settings which its name is passed
+         * as a parameter.
+         * This method waits for any user input made by the keys specified by the axis. If there is in fact user input, small
+         * values (+ve or -ve) are returned. 
+         * We are saving this return in the deltaX variable.
+         */
+
+        // The deltaTime property is used to make the movement frame independent since the method is being called in the Update
+        // and the number of times Move will be called in one second depends on the frame rate
+        var deltaX = Input.GetAxis("Horizontal") * Time.deltaTime * movementSpeed;
+
+        /*
+         * To fetch properties from the Unity Editor the syntax is:
+         *    object.ComponentName.Property
+         * If the property is for the current object the script is controlling, the object does not need to be specified so:
+         *     ComponentName.Property
+         */
+
+        var newXPos = transform.position.x + deltaX;
+
+        transform.position = new Vector3(newXPos, transform.position.y, transform.position.z);
+
     }
 }
