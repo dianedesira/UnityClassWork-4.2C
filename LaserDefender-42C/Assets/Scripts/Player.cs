@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -17,13 +18,20 @@ public class Player : MonoBehaviour
      * developers call the method where is required.
      */
 
+    //global variables
     [SerializeField] float movementSpeed = 10f;
+    [SerializeField] GameObject laserPrefab;
 
+    float xMin;
+    float xMax;
+    float yMin;
+    float yMax;
 
     // Start is called before the first frame update
     void Start()
     {
-       // print("Hello this is the Start built-in method!");
+        // print("Hello this is the Start built-in method!");
+        SetUpBoundaries();
     }
 
     // Update is called once per frame
@@ -47,6 +55,8 @@ public class Player : MonoBehaviour
         // The deltaTime property is used to make the movement frame independent since the method is being called in the Update
         // and the number of times Move will be called in one second depends on the frame rate
         var deltaX = Input.GetAxis("Horizontal") * Time.deltaTime * movementSpeed;
+        //local variables
+        var deltaY = Input.GetAxis("Vertical") * Time.deltaTime * movementSpeed;
 
         /*
          * To fetch properties from the Unity Editor the syntax is:
@@ -55,9 +65,35 @@ public class Player : MonoBehaviour
          *     ComponentName.Property
          */
 
-        var newXPos = transform.position.x + deltaX;
+        /* Clamp restricts values to be between a set min and max. If the value is
+         * within the range the same value will be returned, otherwiswe if the
+         * value is less than the minimum, the minimum value is returned and if it
+         * is higher than the maximum, the maximum will be returned.
+         */
 
-        transform.position = new Vector3(newXPos, transform.position.y, transform.position.z);
+        var newXPos = Mathf.Clamp(transform.position.x + deltaX, xMin, xMax);
+        var newYPos = Mathf.Clamp(transform.position.y + deltaY, yMin, yMax);
+
+        transform.position = new Vector3(newXPos, newYPos, transform.position.z);
 
     }
+    void SetUpBoundaries()
+    {
+        Camera gameCamera = Camera.main; // fetching the main camera
+        float padding = 0.5f;
+
+        /* ViewportToWorldPoint checks the camera's view at runtime and calculates
+         * the actual coordinates but in our code we just refer to the minimum as
+         * 0 and maximum as 1.
+         * Thus, the code will always be camera size independent.
+         */
+
+        xMin = gameCamera.ViewportToWorldPoint(new Vector3(0, 0, 0)).x + padding;
+        xMax = gameCamera.ViewportToWorldPoint(new Vector3(1, 0, 0)).x - padding;
+        yMin = gameCamera.ViewportToWorldPoint(new Vector3(0, 0, 0)).y + padding;
+        yMax = gameCamera.ViewportToWorldPoint(new Vector3(0, 1, 0)).y - padding;
+    
+    }
 }
+
+
