@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
 
     //global variables
     [SerializeField] float movementSpeed = 10f;
+    [SerializeField] float laserSpeed = 20f;
+
     [SerializeField] GameObject laserPrefab;
 
     float xMin;
@@ -39,6 +41,7 @@ public class Player : MonoBehaviour
     {
         // print("This is the Update method");
         Move();
+        Fire();
     }
 
     /* This method will control the player's movement depending on the controls/input by the user
@@ -93,6 +96,30 @@ public class Player : MonoBehaviour
         yMin = gameCamera.ViewportToWorldPoint(new Vector3(0, 0, 0)).y + padding;
         yMax = gameCamera.ViewportToWorldPoint(new Vector3(0, 1, 0)).y - padding;
     
+    }
+
+    void Fire()
+    {
+        /* The GetButtonDown method returns true whenever as soon as the user presses down on the key/s 
+         * represented by the given button name. The method is executed only once per one key down.
+         * (GetButton would keep on running while the user keeps on holding the button)
+         */
+
+        if (Input.GetButtonDown("Fire1")) //if(Input.GetButtonDown("Fire1") == true)
+        {
+            /* The Instantiate method generates a clone/copy of the object which is passed as the first
+             * parameter. There are different ways on how we can call this method, we needed to indicate
+             * the position where the clone/copy will be created in the scene (we need it to appear in the
+             * same position as the player ship).
+             * Quaternion.identity refers to no rotation (0,0,0)
+             * 
+             * Instantiate returns a reference to the clone which has just been generated.
+             */
+
+            GameObject laserClone = Instantiate(laserPrefab, transform.position, Quaternion.identity);
+
+            laserClone.GetComponent<Rigidbody2D>().velocity = new Vector2(0, laserSpeed);
+        }
     }
 }
 
