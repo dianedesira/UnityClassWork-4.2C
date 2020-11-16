@@ -21,8 +21,11 @@ public class Player : MonoBehaviour
     //global variables
     [SerializeField] float movementSpeed = 10f;
     [SerializeField] float laserSpeed = 20f;
+    [SerializeField] float laserDelay = 0.3f;
 
     [SerializeField] GameObject laserPrefab;
+
+    Coroutine firingCoroutine;
 
     float xMin;
     float xMax;
@@ -34,6 +37,9 @@ public class Player : MonoBehaviour
     {
         // print("Hello this is the Start built-in method!");
         SetUpBoundaries();
+
+        //To call a coroutine, we need to use the StartCoroutine method.
+        //StartCoroutine(PrintAndWait());
     }
 
     // Update is called once per frame
@@ -107,6 +113,37 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Fire1")) //if(Input.GetButtonDown("Fire1") == true)
         {
+            firingCoroutine = StartCoroutine(FireContinuously());
+        }
+
+        if (Input.GetButtonUp("Fire1"))
+        {
+            StopCoroutine(firingCoroutine);
+            //StopAllCoroutines();
+        }
+    }
+
+    /* Coroutines are special methods used to allow processes to continue with the rest of the
+     * application rather than pausing due to the current method requiring a delay or a wait
+     * for a condition. If the process would stop, the whole or most of the application would
+     * seems as if it froze.
+     * Coroutines tell the process to return to the other tasks and come back after an amount
+     * of time or after a condition is met by using the yield return keywords and one of the
+     * types which fall under IEnumerator (WaitForSeconds, WaitUntil, WaitWhile etc).
+     */
+    IEnumerator PrintAndWait()
+    {
+        print("Message 1 has been sent!");
+
+        yield return new WaitForSeconds(3f);
+
+        print("Message 2 has been sent!");
+    }
+
+    IEnumerator FireContinuously()
+    {
+        while (true)
+        {
             /* The Instantiate method generates a clone/copy of the object which is passed as the first
              * parameter. There are different ways on how we can call this method, we needed to indicate
              * the position where the clone/copy will be created in the scene (we need it to appear in the
@@ -119,6 +156,8 @@ public class Player : MonoBehaviour
             GameObject laserClone = Instantiate(laserPrefab, transform.position, Quaternion.identity);
 
             laserClone.GetComponent<Rigidbody2D>().velocity = new Vector2(0, laserSpeed);
+
+            yield return new WaitForSeconds(laserDelay);
         }
     }
 }
