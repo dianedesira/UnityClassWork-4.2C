@@ -43,4 +43,43 @@ public class WaveConfig : ScriptableObject
     {
         return enemyPrefab;
     }
+    /*public GameObject GetPathPrefab()
+    {
+        return pathPrefab;
+    }*/
+
+    /* Instead of returning the whole path prefab, we are opening the path prefab here and 
+     * returning the list of waypoints instead - by going through each child of the path
+     * prefab and placing it in a normal list.
+     */
+    public List<Transform> GetWaypoints()
+    {
+        List<Transform> waypoints = new List<Transform>();
+
+        /* a foreach loop is used to traverse a collection and go through the items one by one
+         * The syntax is foreach item (type of item and give it a temp name) in collection
+         */
+        foreach (Transform waypoint in pathPrefab.transform)
+        {
+            waypoints.Add(waypoint);
+        }
+
+        return waypoints;
+    }
+    public float GetTimeBetweenSpawns()
+    {
+        return timeBetweenSpawns;
+    }
+    public int GetNumberOfEnemies()
+    {
+        return numberOfEnemies;
+    }
+    public float GetSpawnRandomFactor()
+    {
+        return spawnRandomFactor;
+    }
+    public float GetEnemyMoveSpeed()
+    {
+        return enemyMoveSpeed;
+    }
 }

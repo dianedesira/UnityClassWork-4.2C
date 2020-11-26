@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class EnemyPathing : MonoBehaviour
 {
-    [SerializeField] List<Transform> waypoints = new List<Transform>();// a collection to store different waypoints
+    [SerializeField] WaveConfig waveConfig;
+    
+    List<Transform> waypoints = new List<Transform>();// a collection to store different waypoints
     //set in Unity. These waypoints will represent the path that the enemy needs to move along.
 
     [SerializeField] float moveSpeed = 2f;
@@ -14,6 +16,7 @@ public class EnemyPathing : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        waypoints = waveConfig.GetWaypoints();
         /* Setting the current enemy to be located on the first waypoint in the list.
          * Different properties are fetched from their components. Our list is made up of just Transform components
          * so each item is a trasform component, thus, waypoints[waypointIndex] will be translated to transform.
