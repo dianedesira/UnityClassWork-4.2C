@@ -96,3 +96,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 10
+  laserSpeed: 20
+  laserDelay: 0.3
+  laserPrefab: {fileID: 2407261030850918675, guid: 510d98f46a9f83047a7fbc15d38bb1a7, type: 3}
