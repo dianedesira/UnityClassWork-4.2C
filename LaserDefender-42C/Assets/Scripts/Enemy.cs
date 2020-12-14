@@ -25,7 +25,17 @@ public class Enemy : MonoBehaviour
         //We are retrieving the damage dealer of the current laser which hit the enemy since different
         //lasers CAN have different damage values
         DamageDealer damageDealer = collision.gameObject.GetComponent<DamageDealer>();
+        ProcessHit(damageDealer);
+    }
+
+    private void ProcessHit(DamageDealer damageDealer)
+    {
         health -= damageDealer.GetDamage(); // health = health - damagedDealer.GetDamage();
         // A -= B; => A = A - B;
+
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }
