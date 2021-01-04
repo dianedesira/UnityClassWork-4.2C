@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     [SerializeField] float laserSpeed = 20f;
     [SerializeField] float laserDelay = 0.3f;
 
+    [SerializeField] int playerHealth = 100;
+
     [SerializeField] GameObject laserPrefab;
 
     Coroutine firingCoroutine;
@@ -158,6 +160,32 @@ public class Player : MonoBehaviour
             laserClone.GetComponent<Rigidbody2D>().velocity = new Vector2(0, laserSpeed);
 
             yield return new WaitForSeconds(laserDelay);
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //We are retrieving the damage dealer of the current laser which hit the enemy since different
+        //lasers CAN have different damage values
+        DamageDealer damageDealer = collision.gameObject.GetComponent<DamageDealer>();
+
+        if (!damageDealer) //checking if the damageDealer variable is empty/null
+        {
+            return; // makes the method stop and return back, thus ProcessHit() will never be called IF
+            // the damageDealer is empty.
+        }
+
+        ProcessHit(damageDealer);
+    }
+
+    private void ProcessHit(DamageDealer damageDealer)
+    {
+        playerHealth -= damageDealer.GetDamage(); // health = health - damagedDealer.GetDamage();
+        // A -= B; => A = A - B;
+        damageDealer.Hit();
+
+        if (playerHealth <= 0)
+        {
+            Destroy(gameObject);
         }
     }
 }
