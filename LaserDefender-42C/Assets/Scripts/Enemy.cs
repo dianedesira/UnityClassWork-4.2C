@@ -15,6 +15,14 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameObject enemyLaserPrefab;
     [SerializeField] float enemyLaserSpeed = 20f;
 
+    [SerializeField] GameObject deathVFX;
+
+    [SerializeField] AudioClip enemyDeathSound;
+    [SerializeField] [Range(0, 1)] float enemyDeathSoundVolume = 0.75f; //The Range attribute is used to
+    //create a GUI component in the Unity Editor to drag the value of the property accordingly
+    [SerializeField] AudioClip shootSound;
+    [SerializeField] [Range(0, 1)] float shootSoundVolume = 0.25f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -52,8 +60,21 @@ public class Enemy : MonoBehaviour
         damageDealer.Hit();
         if (health <= 0)
         {
-            Destroy(gameObject);
+            Die();
         }
+    }
+
+    private void Die()
+    {
+        AudioSource.PlayClipAtPoint(enemyDeathSound, Camera.main.transform.position, enemyDeathSoundVolume);
+
+        // creating a clone/copy of the explosion stars visual effect
+        GameObject explosion = Instantiate(deathVFX, transform.position, Quaternion.identity);
+
+        //destroy the blast effect after 1 second
+        Destroy(explosion, 1f);
+
+        Destroy(gameObject);
     }
 
     void CountDownAndShoot()
@@ -79,5 +100,7 @@ public class Enemy : MonoBehaviour
         GameObject enemyLaserClone = Instantiate(enemyLaserPrefab, transform.position, Quaternion.Euler(0,0,180));
 
         enemyLaserClone.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -enemyLaserSpeed);
+
+        AudioSource.PlayClipAtPoint(shootSound, Camera.main.transform.position, shootSoundVolume);
     }
 }

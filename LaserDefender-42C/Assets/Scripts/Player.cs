@@ -27,6 +27,11 @@ public class Player : MonoBehaviour
 
     [SerializeField] GameObject laserPrefab;
 
+    [SerializeField] AudioClip playerDeathSound;
+    [SerializeField] [Range(0, 1)] float playerDeathSoundVolume = 0.75f;
+    [SerializeField] AudioClip shootSound;
+    [SerializeField] [Range(0, 1)] float shootSoundVolume = 0.1f;
+
     Coroutine firingCoroutine;
 
     float xMin;
@@ -159,6 +164,8 @@ public class Player : MonoBehaviour
 
             laserClone.GetComponent<Rigidbody2D>().velocity = new Vector2(0, laserSpeed);
 
+            AudioSource.PlayClipAtPoint(shootSound, Camera.main.transform.position, shootSoundVolume);
+
             yield return new WaitForSeconds(laserDelay);
         }
     }
@@ -185,8 +192,15 @@ public class Player : MonoBehaviour
 
         if (playerHealth <= 0)
         {
-            Destroy(gameObject);
+            Die();
         }
+    }
+
+    private void Die()
+    {
+        AudioSource.PlayClipAtPoint(playerDeathSound, Camera.main.transform.position, playerDeathSoundVolume);
+
+        Destroy(gameObject);
     }
 }
 
