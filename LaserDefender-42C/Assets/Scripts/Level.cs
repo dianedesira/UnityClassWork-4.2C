@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement; // We need to import the SceneManagement libr
 
 public class Level : MonoBehaviour
 {
+    [SerializeField] float delayInSeconds = 2f; // delay before loading the Game over scene
+
     public void LoadStartMenu()
     {
         /* The LoadScene method is found in the SceneManager class which is located in the SceneManagement
@@ -21,13 +23,22 @@ public class Level : MonoBehaviour
         SceneManager.LoadScene("LaserDefender");
     }
 
-    public void GameOver()
+    public void LoadGameOver()
     {
-        SceneManager.LoadScene("GameOver");
+        StartCoroutine(WaitAndLoad());
     }
 
     public void QuitGame()
     {
+        print("quitting game!");
         Application.Quit(); //this will quit the executable game and not while testing in the Editor
+    }
+
+    IEnumerator WaitAndLoad()
+    {
+        yield return new WaitForSeconds(delayInSeconds); // once coroutine is called, return and come back after
+        // the delay is up (e.g. 2 seconds) so that the Game Over scene can be loaded.
+
+        SceneManager.LoadScene("GameOver");
     }
 }
