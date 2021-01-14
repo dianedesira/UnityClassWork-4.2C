@@ -20,6 +20,9 @@ public class Level : MonoBehaviour
 
     public void LoadGame()
     {
+        FindObjectOfType<GameSession>().ResetGame(); //everytime LaserDefender is to open, a new game session 
+        //should always be created
+
         SceneManager.LoadScene("LaserDefender");
     }
 

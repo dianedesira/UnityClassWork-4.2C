@@ -4,19 +4,22 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+   [Header("Enemy Stats")]
     [SerializeField] float health = 100;
+    [SerializeField] int scoreValue = 50;
+
+   [Header("Shooting")]
     [SerializeField] float shotCounter; // random time for the enemy to wait before shooting the next 
     //laser. The time will be reduced every frame so that once the time is up, the enemy can shoot the
     //laser.
     [SerializeField] float minTimeBetweenShots = 0.2f; // a range for the random number is required and
     //we need the shortest possible time to wait to shoot and the longest possible time to wait to shoot.
     [SerializeField] float maxTimeBetweenShots = 3f;
-
     [SerializeField] GameObject enemyLaserPrefab;
     [SerializeField] float enemyLaserSpeed = 20f;
-
+  
+   [Header("Effects")]
     [SerializeField] GameObject deathVFX;
-
     [SerializeField] AudioClip enemyDeathSound;
     [SerializeField] [Range(0, 1)] float enemyDeathSoundVolume = 0.75f; //The Range attribute is used to
     //create a GUI component in the Unity Editor to drag the value of the property accordingly
@@ -66,6 +69,8 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        FindObjectOfType<GameSession>().AddToScore(scoreValue);
+
         AudioSource.PlayClipAtPoint(enemyDeathSound, Camera.main.transform.position, enemyDeathSoundVolume);
 
         // creating a clone/copy of the explosion stars visual effect
