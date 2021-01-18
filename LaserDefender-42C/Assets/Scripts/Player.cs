@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     [SerializeField] float laserSpeed = 20f;
     [SerializeField] float laserDelay = 0.3f;
 
-    [SerializeField] int playerHealth = 100;
+    [SerializeField] int playerHealth = 500;
 
     [SerializeField] GameObject laserPrefab;
 
@@ -192,6 +192,7 @@ public class Player : MonoBehaviour
 
         if (playerHealth <= 0)
         {
+            playerHealth = 0;
             Die();
         }
     }
@@ -209,6 +210,11 @@ public class Player : MonoBehaviour
 
         Destroy(gameObject);
 
+    }
+
+    public int GetHealth()
+    {
+        return playerHealth;
     }
 }
 
